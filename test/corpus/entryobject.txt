@@ -1,0 +1,31 @@
+==================
+Entry object
+==================
+
+[theobject]
+key1 = value 1 #tag1 @label1
+
+key2 = value 2 #tag1 @label1 #tag2
+
+---
+
+(document
+  (entryObject
+    (header)
+    (pair
+      (key)
+      (value
+        (text)
+        (meta
+          (tag)
+          (label))))
+    (pair
+      (key)
+      (value
+        (text)
+        (meta
+          (tag)
+          (label)
+          (tag)))))
+)
+

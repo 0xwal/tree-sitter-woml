@@ -1,0 +1,65 @@
+===
+Entry list
+===
+
+[thelist]
+- first #tag1 #tag2 @label1 @label2
+- second #tag1 @label1 @tag2
+- third
+
+---
+
+
+(document
+  (entryList
+    (header)
+    (value
+      (text)
+      (meta
+        (tag)
+        (tag)
+        (label)
+        (label)))
+    (value
+      (text)
+      (meta
+        (tag)
+        (label)
+        (label)))
+    (value
+      (text)))
+)
+
+
+===
+Entry list with root text
+===
+this is a root text
+and yes it's multiline
+
+[thelist]
+- first #tag1 #tag2 @label1 @label2
+- second #tag1 @label1 @tag2
+- third
+
+---
+
+(document
+      rootText: (text)
+      entryList: (entryList
+        header: (header)
+        itemList: (value
+          text: (text)
+          meta: (meta
+            tag: (tag)
+            tag: (tag)
+            label: (label)
+            label: (label)))
+        itemList: (value
+          text: (text)
+          meta: (meta
+            tag: (tag)
+            label: (label)
+            label: (label)))
+        itemList: (value
+          text: (text))))

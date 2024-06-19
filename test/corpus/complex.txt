@@ -1,0 +1,123 @@
+===
+Object & List
+===
+
+[thelist]
+- first #tag1 #tag2 @label1 @label2
+- second #tag1 @label1 @tag2
+- third
+
+[theobject]
+key1 = value 1 #tag1 @label1
+key2 = value 2 #tag1 @label1 #tag2
+
+---
+
+(document
+  (entryList
+    (header)
+    (value
+      (text)
+      (meta
+        (tag)
+        (tag)
+        (label)
+        (label)))
+    (value
+      (text)
+      (meta
+        (tag)
+        (label)
+        (label)))
+    (value
+      (text)))
+  (entryObject
+    (header)
+    (pair
+      (key)
+      (value
+        (text)
+        (meta
+          (tag)
+          (label))))
+    (pair
+      (key)
+      (value
+        (text)
+        (meta
+          (tag)
+          (label)
+          (tag))))))
+
+
+===
+Object & List & List
+===
+
+[thelist]
+- first #tag1 #tag2 @label1 @label2
+- second #tag1 @label1 @tag2
+- third
+
+[theobject]
+key1 = value 1 #tag1 @label1
+key2 = value 2 #tag1 @label1 #tag2
+
+[anotherlist]
+- list item
+- list item #tag1 #tag2 @label1 @label2
+- list item #tag1 @label1 @tag2
+
+---
+(document
+  (entryList
+    (header)
+    (value
+      (text)
+      (meta
+        (tag)
+        (tag)
+        (label)
+        (label)))
+    (value
+      (text)
+      (meta
+        (tag)
+        (label)
+        (label)))
+    (value
+      (text)))
+  (entryObject
+    (header)
+    (pair
+      (key)
+      (value
+        (text)
+        (meta
+          (tag)
+          (label))))
+    (pair
+      (key)
+      (value
+        (text)
+        (meta
+          (tag)
+          (label)
+          (tag)))))
+  (entryList
+    (header)
+    (value
+      (text))
+    (value
+      (text)
+      (meta
+        (tag)
+        (tag)
+        (label)
+        (label)))
+    (value
+      (text)
+      (meta
+        (tag)
+        (label)
+        (label)))))

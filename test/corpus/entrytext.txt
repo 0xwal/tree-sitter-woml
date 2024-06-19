@@ -1,0 +1,16 @@
+==================
+Entry text
+==================
+
+[thetext]
+this is my text that include
+multiline
+---
+
+
+(document
+  (entryText
+    (header)
+    (text)
+  )
+)

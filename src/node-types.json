@@ -1,0 +1,212 @@
+[
+  {
+    "type": "document",
+    "named": true,
+    "fields": {
+      "entryList": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "entryList",
+            "named": true
+          }
+        ]
+      },
+      "entryObject": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "entryObject",
+            "named": true
+          }
+        ]
+      },
+      "entryText": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "entryText",
+            "named": true
+          }
+        ]
+      },
+      "rootText": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "text",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "entryList",
+    "named": true,
+    "fields": {
+      "itemList": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "\n",
+            "named": false
+          },
+          {
+            "type": "-",
+            "named": false
+          },
+          {
+            "type": "value",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "entryObject",
+    "named": true,
+    "fields": {
+      "pair": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "pair",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "entryText",
+    "named": true,
+    "fields": {
+      "text": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "text",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "meta",
+    "named": true,
+    "fields": {
+      "label": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "label",
+            "named": true
+          }
+        ]
+      },
+      "tag": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "tag",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "pair",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "key",
+          "named": true
+        },
+        {
+          "type": "value",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "text",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "value",
+    "named": true,
+    "fields": {
+      "meta": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "meta",
+            "named": true
+          }
+        ]
+      },
+      "text": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "text",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "\n",
+    "named": false
+  },
+  {
+    "type": "-",
+    "named": false
+  },
+  {
+    "type": "=",
+    "named": false
+  },
+  {
+    "type": "[",
+    "named": false
+  },
+  {
+    "type": "]",
+    "named": false
+  },
+  {
+    "type": "key",
+    "named": true
+  },
+  {
+    "type": "label",
+    "named": true
+  },
+  {
+    "type": "tag",
+    "named": true
+  }
+]
