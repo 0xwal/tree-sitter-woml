@@ -1,0 +1,40 @@
+===
+Full test
+===
+this is a root text
+
+[aList]
+- item 1 #tag @label @label
+
+- item 2 #tag #tag @label
+- item 3 @label #tag #tag
+
+---
+
+(doc
+  rootText: (text)
+  entries: (entries
+    entry: (entryList
+      header: (header)
+      content: (content
+        item: (item
+          (minus)
+          line: (line)
+          tag: (tag)
+          tag: (label)
+          tag: (label))
+        item: (item
+          (minus)
+          line: (line)
+          tag: (tag)
+          tag: (tag)
+          tag: (label))
+        item: (item
+          (minus)
+          line: (line)
+          label: (label)
+          label: (label)
+          tag: (tag)
+          tag: (tag)))))
+
+)

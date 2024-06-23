@@ -47,7 +47,10 @@
   "tree-sitter": [
     {
       "scope": "source.woml",
-      "injection-regex": "^woml$"
+      "injection-regex": "^woml$",
+      "file-types": [
+        "woml"
+      ]
     }
   ]
 }

@@ -3,44 +3,43 @@ const newline = /\r?\n/;
 module.exports = grammar({
   name: "token",
 
-  // extra: ($) => ["\n", "\r", /\s/],
+  extra: ($) => [/\s/],
   // extra: ($) => [],
 
-  conflicts: ($) => [[$.line]],
+  // conflicts: ($) => [[$.text]],
   rules: {
-    doc: ($) => seq(field("rootText", optional($.multiline)), $.entries),
-    entries: ($) => repeat1($._entry),
+    doc: ($) =>
+      seq(
+        alias(field("rootText", optional($.text)), $.rootText),
+        field("entries", optional($.entries)),
+      ),
 
-    _entry: ($) =>
-      seq(choice($.entryObject, $.entryList, $.entryText), newline),
+    entries: ($) =>
+      repeat1(field("entry", choice($.entryList, $.entryObject, $.entryText))),
 
     entryObject: ($) => seq($.header, repeat1($.pair)),
+    pair: ($) => seq(field("key", $.identifier), ":", field("value", $.line)),
+
+    entryText: ($) => seq($.header, alias($.text, $.content)),
+
     entryList: ($) => seq($.header, repeat1($.listItem)),
-    entryText: ($) => seq($.header, $.multiline),
+    listItem: ($) => seq($.minus, field("item", alias($.line, $.value))),
 
-    pair: ($) =>
-      seq(field("key", $.key), "=", field("value", $.paragraph), newline),
+    header: ($) => seq("[", $.identifier, "]"),
 
-    key: ($) => $._word,
+    text: ($) => seq(alias(repeat1($._text), $.text), repeat($._meta)),
 
-    listItem: ($) => seq("-", $.paragraph, newline),
+    line: ($) => seq(field("line", alias($._text, $.text)), repeat($._meta)),
 
-    header: ($) => seq("[", $._word, "]", newline),
+    _meta: ($) => choice(field("label", $.label), field("tag", $.tag)),
 
-    multiline: ($) => prec(1, repeat1(seq($.paragraph, newline))),
+    label: ($) => seq("@", alias($.identifier, "labelIdentifier")),
+    tag: ($) => seq("#", alias($.identifier, "tagIdentifier")),
 
-    paragraph: ($) => seq($.line, repeat(seq(" ", $._meta))),
+    identifier: ($) => token(/[a-zA-Z][\w]*/),
 
-    line: ($) => seq($._word, repeat(seq(" ", $._word))),
+    _text: ($) => token(/[\w\d][\w\d_\'\"\()\[\]\{\} -]+/),
 
-    _meta: ($) => choice($.tag, $.label),
-
-    label: ($) => seq("@", alias($._word, "label")),
-    tag: ($) => seq("#", alias($._word, "tag")),
-
-    _word: ($) => token(/[a-zA-Z0-9_]+/),
-
-    _LETTER: ($) => token(/[a-z]/),
-    _DIGIT: ($) => token(/[0-9]/),
+    minus: ($) => "-",
   },
 });

@@ -110,7 +110,11 @@ test:
 	$(TS) generate
 	$(TS) test
 
+scratch:
+	$(TS) generate
+	$(TS) parse ./test/scratch.txt
+
 debug:
 	$(TS) generate
-	$(TS) parse test.txt -D
+	$(TS) parse ./test/scratch.txt -D
 .PHONY: all install uninstall clean test

@@ -1,108 +1,6 @@
 [
   {
-    "type": "document",
-    "named": true,
-    "fields": {
-      "entryList": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "entryList",
-            "named": true
-          }
-        ]
-      },
-      "entryObject": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "entryObject",
-            "named": true
-          }
-        ]
-      },
-      "entryText": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "entryText",
-            "named": true
-          }
-        ]
-      },
-      "rootText": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "text",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "entryList",
-    "named": true,
-    "fields": {
-      "itemList": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "\n",
-            "named": false
-          },
-          {
-            "type": "-",
-            "named": false
-          },
-          {
-            "type": "value",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "entryObject",
-    "named": true,
-    "fields": {
-      "pair": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "pair",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "entryText",
-    "named": true,
-    "fields": {
-      "text": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "text",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "meta",
+    "type": "content",
     "named": true,
     "fields": {
       "label": {
@@ -125,10 +23,70 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "text",
+          "named": true
+        }
+      ]
     }
   },
   {
-    "type": "pair",
+    "type": "doc",
+    "named": true,
+    "fields": {
+      "entries": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "entries",
+            "named": true
+          }
+        ]
+      },
+      "rootText": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "rootText",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "entries",
+    "named": true,
+    "fields": {
+      "entry": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "entryList",
+            "named": true
+          },
+          {
+            "type": "entryObject",
+            "named": true
+          },
+          {
+            "type": "entryText",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "entryList",
     "named": true,
     "fields": {},
     "children": {
@@ -136,15 +94,202 @@
       "required": true,
       "types": [
         {
-          "type": "key",
+          "type": "header",
           "named": true
         },
         {
-          "type": "value",
+          "type": "listItem",
           "named": true
         }
       ]
     }
+  },
+  {
+    "type": "entryObject",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "header",
+          "named": true
+        },
+        {
+          "type": "pair",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "entryText",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "content",
+          "named": true
+        },
+        {
+          "type": "header",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "header",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "label",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "line",
+    "named": true,
+    "fields": {
+      "label": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "label",
+            "named": true
+          }
+        ]
+      },
+      "line": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "text",
+            "named": true
+          }
+        ]
+      },
+      "tag": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "tag",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "listItem",
+    "named": true,
+    "fields": {
+      "item": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "value",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "minus",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "pair",
+    "named": true,
+    "fields": {
+      "key": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "line",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rootText",
+    "named": true,
+    "fields": {
+      "label": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "label",
+            "named": true
+          }
+        ]
+      },
+      "tag": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "tag",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "text",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "tag",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "text",
@@ -155,17 +300,17 @@
     "type": "value",
     "named": true,
     "fields": {
-      "meta": {
-        "multiple": false,
+      "label": {
+        "multiple": true,
         "required": false,
         "types": [
           {
-            "type": "meta",
+            "type": "label",
             "named": true
           }
         ]
       },
-      "text": {
+      "line": {
         "multiple": false,
         "required": true,
         "types": [
@@ -174,19 +319,29 @@
             "named": true
           }
         ]
+      },
+      "tag": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "tag",
+            "named": true
+          }
+        ]
       }
     }
   },
   {
-    "type": "\n",
+    "type": "#",
     "named": false
   },
   {
-    "type": "-",
+    "type": ":",
     "named": false
   },
   {
-    "type": "=",
+    "type": "@",
     "named": false
   },
   {
@@ -198,15 +353,19 @@
     "named": false
   },
   {
-    "type": "key",
+    "type": "identifier",
     "named": true
   },
   {
-    "type": "label",
+    "type": "labelIdentifier",
+    "named": false
+  },
+  {
+    "type": "minus",
     "named": true
   },
   {
-    "type": "tag",
-    "named": true
+    "type": "tagIdentifier",
+    "named": false
   }
 ]
