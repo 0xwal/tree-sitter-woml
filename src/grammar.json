@@ -1,5 +1,5 @@
 {
-  "name": "token",
+  "name": "woml",
   "rules": {
     "doc": {
       "type": "SEQ",
@@ -46,25 +46,39 @@
     "entries": {
       "type": "REPEAT1",
       "content": {
-        "type": "FIELD",
-        "name": "entry",
-        "content": {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "entryList"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "entryObject"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "entryText"
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "FIELD",
+            "name": "entryList",
+            "content": {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "entryList"
+              },
+              "named": true,
+              "value": "entry"
             }
-          ]
-        }
+          },
+          {
+            "type": "FIELD",
+            "name": "entryObject",
+            "content": {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "entryObject"
+              },
+              "named": true,
+              "value": "entry"
+            }
+          },
+          {
+            "type": "SYMBOL",
+            "name": "entryText"
+          }
+        ]
       }
     },
     "entryObject": {
@@ -77,8 +91,12 @@
         {
           "type": "REPEAT1",
           "content": {
-            "type": "SYMBOL",
-            "name": "pair"
+            "type": "FIELD",
+            "name": "pair",
+            "content": {
+              "type": "SYMBOL",
+              "name": "pair"
+            }
           }
         }
       ]
@@ -136,8 +154,12 @@
         {
           "type": "REPEAT1",
           "content": {
-            "type": "SYMBOL",
-            "name": "listItem"
+            "type": "FIELD",
+            "name": "listItem",
+            "content": {
+              "type": "SYMBOL",
+              "name": "listItem"
+            }
           }
         }
       ]

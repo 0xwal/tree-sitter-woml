@@ -65,59 +65,69 @@
     "type": "entries",
     "named": true,
     "fields": {
-      "entry": {
+      "entryList": {
         "multiple": true,
-        "required": true,
+        "required": false,
         "types": [
           {
-            "type": "entryList",
+            "type": "entry",
             "named": true
-          },
+          }
+        ]
+      },
+      "entryObject": {
+        "multiple": true,
+        "required": false,
+        "types": [
           {
-            "type": "entryObject",
-            "named": true
-          },
-          {
-            "type": "entryText",
+            "type": "entry",
             "named": true
           }
         ]
       }
-    }
-  },
-  {
-    "type": "entryList",
-    "named": true,
-    "fields": {},
+    },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
-          "type": "header",
-          "named": true
-        },
-        {
-          "type": "listItem",
+          "type": "entryText",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "entryObject",
+    "type": "entry",
     "named": true,
-    "fields": {},
+    "fields": {
+      "listItem": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "listItem",
+            "named": true
+          }
+        ]
+      },
+      "pair": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "pair",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
         {
           "type": "header",
-          "named": true
-        },
-        {
-          "type": "pair",
           "named": true
         }
       ]

@@ -1,7 +1,7 @@
 const newline = /\r?\n/;
 
 module.exports = grammar({
-  name: "token",
+  name: "woml",
 
   extra: ($) => [/\s/],
   // extra: ($) => [],
@@ -15,14 +15,20 @@ module.exports = grammar({
       ),
 
     entries: ($) =>
-      repeat1(field("entry", choice($.entryList, $.entryObject, $.entryText))),
+      repeat1(
+        choice(
+          field("entryList", alias($.entryList, $.entry)),
+          field("entryObject", alias($.entryObject, $.entry)),
+          $.entryText,
+        ),
+      ),
 
-    entryObject: ($) => seq($.header, repeat1($.pair)),
+    entryObject: ($) => seq($.header, repeat1(field("pair", $.pair))),
     pair: ($) => seq(field("key", $.identifier), ":", field("value", $.line)),
 
     entryText: ($) => seq($.header, alias($.text, $.content)),
 
-    entryList: ($) => seq($.header, repeat1($.listItem)),
+    entryList: ($) => seq($.header, repeat1(field("listItem", $.listItem))),
     listItem: ($) => seq($.minus, field("item", alias($.line, $.value))),
 
     header: ($) => seq("[", $.identifier, "]"),
