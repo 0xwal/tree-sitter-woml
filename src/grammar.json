@@ -313,7 +313,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PATTERN",
-        "value": "[a-zA-Z][\\w]*"
+        "value": "[a-zA-Z_][\\w]*"
       }
     },
     "_text": {

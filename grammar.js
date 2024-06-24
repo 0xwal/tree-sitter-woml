@@ -42,7 +42,7 @@ module.exports = grammar({
     label: ($) => seq("@", alias($.identifier, "labelIdentifier")),
     tag: ($) => seq("#", alias($.identifier, "tagIdentifier")),
 
-    identifier: ($) => token(/[a-zA-Z][\w]*/),
+    identifier: ($) => token(/[a-zA-Z_][\w]*/),
 
     _text: ($) => token(/[\w\d][\w\d_\'\"\()\[\]\{\} -]+/),
 
