@@ -15,25 +15,26 @@ module.exports = grammar({
       ),
 
     entries: ($) =>
-      repeat1(
-        choice(
-          field("entryList", alias($.entryList, $.entry)),
-          field("entryObject", alias($.entryObject, $.entry)),
-          $.entryText,
-        ),
-      ),
+      repeat1(field("entry", choice($.entryList, $.entryObject, $.entryText))),
 
-    entryObject: ($) => seq($.header, repeat1(field("pair", $.pair))),
+    entryObject: ($) =>
+      seq(field("header", $.header), repeat1(field("pair", $.pair))),
     pair: ($) => seq(field("key", $.identifier), ":", field("value", $.line)),
 
-    entryText: ($) => seq($.header, alias($.text, $.content)),
+    entryText: ($) =>
+      seq(
+        field("header", $.header),
+        field("content", alias($.text, $.content)),
+      ),
 
-    entryList: ($) => seq($.header, repeat1(field("listItem", $.listItem))),
+    entryList: ($) =>
+      seq(field("header", $.header), repeat1(field("listItem", $.listItem))),
     listItem: ($) => seq($.minus, field("item", alias($.line, $.value))),
 
-    header: ($) => seq("[", $.identifier, "]"),
+    header: ($) => seq("[", field("identifier", $.identifier), "]"),
 
-    text: ($) => seq(alias(repeat1($._text), $.text), repeat($._meta)),
+    text: ($) =>
+      seq(field("text", alias(repeat1($._text), $.text)), repeat($._meta)),
 
     line: ($) => seq(field("line", alias($._text, $.text)), repeat($._meta)),
 
