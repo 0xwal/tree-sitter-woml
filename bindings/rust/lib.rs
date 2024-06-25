@@ -70,6 +70,21 @@ fn extract_root_text(source: impl AsRef<[u8]>, node: Node) -> Option<WomlValue> 
 	})
 }
 
+fn extract_meta(source: impl AsRef<[u8]>, node: Node) -> (Vec<String>, Vec<String>) {
+	let mut walking = node.walk();
+	let tags = node
+		.children_by_field_name("tag", &mut walking)
+		.map(|t| t.utf8_text(source.as_ref()).unwrap().to_string())
+		.collect::<Vec<String>>();
+
+	let labels = node
+		.children_by_field_name("label", &mut walking)
+		.map(|t| t.utf8_text(source.as_ref()).unwrap().to_string())
+		.collect::<Vec<String>>();
+
+	(tags, labels)
+}
+
 fn extract_entries(source: impl AsRef<[u8]>, node: Node) -> Option<Entries> {
 	let entries_node = node.child_by_field_name("entries")?;
 
@@ -102,17 +117,7 @@ fn extract_entries(source: impl AsRef<[u8]>, node: Node) -> Option<Entries> {
 				.expect("could not get the text")
 				.trim();
 
-			let mut walking = content.walk();
-
-			let tags = content
-				.children_by_field_name("tag", &mut walking)
-				.map(|t| t.utf8_text(source.as_ref()).unwrap().to_string())
-				.collect::<Vec<String>>();
-
-			let labels = content
-				.children_by_field_name("label", &mut walking)
-				.map(|t| t.utf8_text(source.as_ref()).unwrap().to_string())
-				.collect::<Vec<String>>();
+			let (tags, labels) = extract_meta(source.as_ref(), content);
 
 			out.push(Entry::Text(
 				header.to_owned(),
@@ -144,17 +149,7 @@ fn extract_entries(source: impl AsRef<[u8]>, node: Node) -> Option<Entries> {
 					.trim()
 					.to_string();
 
-				let mut walking = item.walk();
-
-				let tags = item
-					.children_by_field_name("tag", &mut walking)
-					.map(|t| t.utf8_text(source.as_ref()).unwrap().to_string())
-					.collect::<Vec<String>>();
-
-				let labels = item
-					.children_by_field_name("label", &mut walking)
-					.map(|t| t.utf8_text(source.as_ref()).unwrap().to_string())
-					.collect::<Vec<String>>();
+				let (tags, labels) = extract_meta(source.as_ref(), item);
 
 				values.push(WomlValue {
 					value: line,
@@ -199,16 +194,7 @@ fn extract_entries(source: impl AsRef<[u8]>, node: Node) -> Option<Entries> {
 					.expect("line has no text")
 					.trim();
 
-				let mut walking = value.walk();
-				let tags = value
-					.children_by_field_name("tag", &mut walking)
-					.map(|n| n.utf8_text(source.as_ref()).unwrap().to_string())
-					.collect::<Vec<String>>();
-
-				let labels = value
-					.children_by_field_name("label", &mut walking)
-					.map(|n| n.utf8_text(source.as_ref()).unwrap().to_string())
-					.collect::<Vec<String>>();
+				let (tags, labels) = extract_meta(source.as_ref(), value);
 
 				map.insert(
 					key.to_string(),
