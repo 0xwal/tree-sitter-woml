@@ -85,6 +85,126 @@ fn extract_meta(source: impl AsRef<[u8]>, node: Node) -> (Vec<String>, Vec<Strin
 	(tags, labels)
 }
 
+fn extract_entry_object(source: impl AsRef<[u8]>, entry: Node) -> Entry {
+	let mut map: HashMap<String, WomlValue> = HashMap::new();
+	let header = entry
+		.child_by_field_name("header")
+		.expect("no header found");
+	let header = header
+		.child_by_field_name("identifier")
+		.expect("header has no identifier");
+	let header = header
+		.utf8_text(source.as_ref())
+		.expect("cannot get the header text");
+
+	let mut walking = entry.walk();
+	let pairs = entry.children_by_field_name("pair", &mut walking);
+
+	for pair in pairs {
+		let key = pair.child_by_field_name("key").expect("pair has no key");
+		let key = key.utf8_text(source.as_ref()).expect("pair has not text");
+
+		let value = pair
+			.child_by_field_name("value")
+			.expect("pair has no value");
+
+		let line = value
+			.child_by_field_name("line")
+			.expect("pair value has no line");
+
+		let line = line
+			.utf8_text(source.as_ref())
+			.expect("line has no text")
+			.trim();
+
+		let (tags, labels) = extract_meta(source.as_ref(), value);
+
+		map.insert(
+			key.to_string(),
+			WomlValue {
+				value: line.to_string(),
+				tags,
+				labels,
+			},
+		);
+	}
+
+	Entry::Object(header.to_owned(), map)
+}
+
+fn extract_entry_list(source: impl AsRef<[u8]>, entry: Node) -> Entry {
+	let mut walking = entry.walk();
+	let list_items = entry.children_by_field_name("listItem", &mut walking);
+
+	let header = entry
+		.child_by_field_name("header")
+		.expect("could not find header")
+		.child_by_field_name("identifier")
+		.expect("could not find identifier");
+
+	let header = header.utf8_text(source.as_ref()).unwrap();
+
+	let mut values = vec![];
+
+	for list_item in list_items {
+		let item = list_item
+			.child_by_field_name("item")
+			.expect("item not found");
+
+		let line = item
+			.child_by_field_name("line")
+			.expect("line not found")
+			.utf8_text(source.as_ref())
+			.unwrap()
+			.trim()
+			.to_string();
+
+		let (tags, labels) = extract_meta(source.as_ref(), item);
+
+		values.push(WomlValue {
+			value: line,
+			tags,
+			labels,
+		})
+	}
+
+	Entry::List(header.to_owned(), values)
+}
+
+fn extract_entry_text(source: impl AsRef<[u8]>, entry: Node) -> Entry {
+	let header = entry
+		.child_by_field_name("header")
+		.expect("could not find header")
+		.child_by_field_name("identifier")
+		.expect("could not find identifier");
+
+	let header = header.utf8_text(source.as_ref()).unwrap();
+
+	let content = entry
+		.child_by_field_name("content")
+		.expect("text has no content");
+
+	let text = content
+		.child_by_field_name("text")
+		.expect("content has no text");
+
+	let text = text
+		.utf8_text(source.as_ref())
+		.expect("could not get the text")
+		.trim();
+
+	let (tags, labels) = extract_meta(source.as_ref(), content);
+
+	Entry::Text(
+		header.to_owned(),
+		WomlValue {
+			value: text.to_owned(),
+			tags,
+			labels,
+		},
+	)
+}
+
 fn extract_entries(source: impl AsRef<[u8]>, node: Node) -> Option<Entries> {
 	let entries_node = node.child_by_field_name("entries")?;
 
@@ -95,120 +215,15 @@ fn extract_entries(source: impl AsRef<[u8]>, node: Node) -> Option<Entries> {
 	let mut out = vec![];
 	for entry in entries {
 		let name = entry.kind();
-		let header = entry
-			.child_by_field_name("header")
-			.expect("could not find header")
-			.child_by_field_name("identifier")
-			.expect("could not find identifier");
 
-		let header = header.utf8_text(source.as_ref()).unwrap();
+		let entry = match name {
+			"entryText" => extract_entry_text(source.as_ref(), entry),
+			"entryList" => extract_entry_list(source.as_ref(), entry),
+			"entryObject" => extract_entry_object(source.as_ref(), entry),
+			_ => continue,
+		};
 
-		if name == "entryText" {
-			let content = entry
-				.child_by_field_name("content")
-				.expect("text has no content");
-
-			let text = content
-				.child_by_field_name("text")
-				.expect("content has no text");
-
-			let text = text
-				.utf8_text(source.as_ref())
-				.expect("could not get the text")
-				.trim();
-
-			let (tags, labels) = extract_meta(source.as_ref(), content);
-
-			out.push(Entry::Text(
-				header.to_owned(),
-				WomlValue {
-					value: text.to_owned(),
-					tags,
-					labels,
-				},
-			));
-			continue;
-		}
-
-		if name == "entryList" {
-			let mut walking = entry.walk();
-			let list_items = entry.children_by_field_name("listItem", &mut walking);
-
-			let mut values = vec![];
-
-			for list_item in list_items {
-				let item = list_item
-					.child_by_field_name("item")
-					.expect("item not found");
-
-				let line = item
-					.child_by_field_name("line")
-					.expect("line not found")
-					.utf8_text(source.as_ref())
-					.unwrap()
-					.trim()
-					.to_string();
-
-				let (tags, labels) = extract_meta(source.as_ref(), item);
-
-				values.push(WomlValue {
-					value: line,
-					tags,
-					labels,
-				})
-			}
-
-			out.push(Entry::List(header.to_owned(), values));
-			continue;
-		}
-
-		if name == "entryObject" {
-			let mut map: HashMap<String, WomlValue> = HashMap::new();
-			let header = entry
-				.child_by_field_name("header")
-				.expect("no header found");
-			let header = header
-				.child_by_field_name("identifier")
-				.expect("header has no identifier");
-			let header = header
-				.utf8_text(source.as_ref())
-				.expect("cannot get the header text");
-
-			let mut walking = entry.walk();
-			let pairs = entry.children_by_field_name("pair", &mut walking);
-
-			for pair in pairs {
-				let key = pair.child_by_field_name("key").expect("pair has no key");
-				let key = key.utf8_text(source.as_ref()).expect("pair has not text");
-
-				let value = pair
-					.child_by_field_name("value")
-					.expect("pair has no value");
-
-				let line = value
-					.child_by_field_name("line")
-					.expect("pair value has no line");
-
-				let line = line
-					.utf8_text(source.as_ref())
-					.expect("line has no text")
-					.trim();
-
-				let (tags, labels) = extract_meta(source.as_ref(), value);
-
-				map.insert(
-					key.to_string(),
-					WomlValue {
-						value: line.to_string(),
-						tags,
-						labels,
-					},
-				);
-			}
-
-			out.push(Entry::Object(header.to_owned(), map));
-			continue;
-		}
+		out.push(entry);
 	}
 
 	Some(out)
