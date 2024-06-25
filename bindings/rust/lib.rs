@@ -13,14 +13,14 @@ pub fn language() -> Language {
 	unsafe { tree_sitter_woml() }
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct WomlValue {
 	pub value: String,
 	pub tags: Vec<String>,
 	pub labels: Vec<String>,
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub enum Entry {
 	Text(String, WomlValue),
 	List(String, Vec<WomlValue>),
@@ -32,6 +32,14 @@ pub type Entries = Vec<Entry>;
 pub struct Woml {
 	pub root_text: Option<WomlValue>,
 	pub entries: Option<Entries>,
+}
+
+impl Woml {
+	pub fn find_by_header(&self, header: &str) -> Option<&Entry> {
+		self.entries.as_ref()?.iter().find(|e| match e {
+			Entry::Text(h, _) | Entry::List(h, _) | Entry::Object(h, _) => *h == header,
+		})
+	}
 }
 
 fn extract_root_text(source: impl AsRef<[u8]>, node: Node) -> Option<WomlValue> {
@@ -66,9 +74,9 @@ fn extract_entries(source: impl AsRef<[u8]>, node: Node) -> Option<Entries> {
 	let entries_node = node.child_by_field_name("entries")?;
 
 	let mut walking = entries_node.walk();
-	//
+
 	let entries = entries_node.children(&mut walking);
-	//
+
 	let mut out = vec![];
 	for entry in entries {
 		let name = entry.kind();
@@ -262,6 +270,15 @@ at the end #tag1
 mod tests {
 
 	use super::*;
+
+	#[test]
+	fn can_find_specific_header() {
+		let woml = parse(CODE);
+		let woml = woml.unwrap();
+
+		assert!(woml.find_by_header("listHeader").is_some());
+		assert!(woml.find_by_header("not-exist").is_none());
+	}
 
 	#[test]
 	fn can_parse_root_text() {
