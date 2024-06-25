@@ -474,89 +474,86 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
   eof = lexer->eof(lexer);
   switch (state) {
     case 0:
-      if (eof) ADVANCE(4);
-      if (lookahead == '#') ADVANCE(9);
-      if (lookahead == '-') ADVANCE(13);
-      if (lookahead == ':') ADVANCE(5);
-      if (lookahead == '@') ADVANCE(8);
-      if (lookahead == '[') ADVANCE(6);
-      if (lookahead == ']') ADVANCE(7);
+      if (eof) ADVANCE(3);
+      if (lookahead == '#') ADVANCE(8);
+      if (lookahead == '-') ADVANCE(12);
+      if (lookahead == ':') ADVANCE(4);
+      if (lookahead == '@') ADVANCE(7);
+      if (lookahead == '[') ADVANCE(5);
+      if (lookahead == ']') ADVANCE(6);
       if (('\t' <= lookahead && lookahead <= '\r') ||
           lookahead == ' ') SKIP(0);
-      if (('0' <= lookahead && lookahead <= '9')) ADVANCE(1);
+      if (('0' <= lookahead && lookahead <= '9')) ADVANCE(11);
+      if (('A' <= lookahead && lookahead <= 'Z') ||
+          lookahead == '_' ||
+          ('a' <= lookahead && lookahead <= 'z')) ADVANCE(9);
+      END_STATE();
+    case 1:
+      if (eof) ADVANCE(3);
+      if (lookahead == '#') ADVANCE(8);
+      if (lookahead == '-') ADVANCE(12);
+      if (lookahead == '@') ADVANCE(7);
+      if (lookahead == '[') ADVANCE(5);
+      if (('\t' <= lookahead && lookahead <= '\r') ||
+          lookahead == ' ') SKIP(1);
       if (('A' <= lookahead && lookahead <= 'Z') ||
           lookahead == '_' ||
           ('a' <= lookahead && lookahead <= 'z')) ADVANCE(10);
       END_STATE();
-    case 1:
-      if (set_contains(sym__text_character_set_1, 10, lookahead)) ADVANCE(12);
-      END_STATE();
     case 2:
-      if (eof) ADVANCE(4);
-      if (lookahead == '#') ADVANCE(9);
-      if (lookahead == '-') ADVANCE(13);
-      if (lookahead == '@') ADVANCE(8);
-      if (lookahead == '[') ADVANCE(6);
+      if (eof) ADVANCE(3);
+      if (lookahead == '#') ADVANCE(8);
+      if (lookahead == '@') ADVANCE(7);
+      if (lookahead == '[') ADVANCE(5);
       if (('\t' <= lookahead && lookahead <= '\r') ||
           lookahead == ' ') SKIP(2);
-      if (('A' <= lookahead && lookahead <= 'Z') ||
+      if (('0' <= lookahead && lookahead <= '9') ||
+          ('A' <= lookahead && lookahead <= 'Z') ||
           lookahead == '_' ||
           ('a' <= lookahead && lookahead <= 'z')) ADVANCE(11);
       END_STATE();
     case 3:
-      if (eof) ADVANCE(4);
-      if (lookahead == '#') ADVANCE(9);
-      if (lookahead == '@') ADVANCE(8);
-      if (lookahead == '[') ADVANCE(6);
-      if (('\t' <= lookahead && lookahead <= '\r') ||
-          lookahead == ' ') SKIP(3);
-      if (('0' <= lookahead && lookahead <= '9') ||
-          ('A' <= lookahead && lookahead <= 'Z') ||
-          lookahead == '_' ||
-          ('a' <= lookahead && lookahead <= 'z')) ADVANCE(1);
-      END_STATE();
-    case 4:
       ACCEPT_TOKEN(ts_builtin_sym_end);
       END_STATE();
-    case 5:
+    case 4:
       ACCEPT_TOKEN(anon_sym_COLON);
       END_STATE();
-    case 6:
+    case 5:
       ACCEPT_TOKEN(anon_sym_LBRACK);
       END_STATE();
-    case 7:
+    case 6:
       ACCEPT_TOKEN(anon_sym_RBRACK);
       END_STATE();
-    case 8:
+    case 7:
       ACCEPT_TOKEN(anon_sym_AT);
       END_STATE();
-    case 9:
+    case 8:
       ACCEPT_TOKEN(anon_sym_POUND);
       END_STATE();
-    case 10:
+    case 9:
       ACCEPT_TOKEN(sym_identifier);
       if ((set_contains(sym__text_character_set_1, 10, lookahead)) &&
           (lookahead < '0' || '9' < lookahead) &&
           (lookahead < 'A' || 'Z' < lookahead) &&
           lookahead != '_' &&
-          (lookahead < 'a' || 'z' < lookahead)) ADVANCE(12);
+          (lookahead < 'a' || 'z' < lookahead)) ADVANCE(11);
+      if (('0' <= lookahead && lookahead <= '9') ||
+          ('A' <= lookahead && lookahead <= 'Z') ||
+          lookahead == '_' ||
+          ('a' <= lookahead && lookahead <= 'z')) ADVANCE(9);
+      END_STATE();
+    case 10:
+      ACCEPT_TOKEN(sym_identifier);
       if (('0' <= lookahead && lookahead <= '9') ||
           ('A' <= lookahead && lookahead <= 'Z') ||
           lookahead == '_' ||
           ('a' <= lookahead && lookahead <= 'z')) ADVANCE(10);
       END_STATE();
     case 11:
-      ACCEPT_TOKEN(sym_identifier);
-      if (('0' <= lookahead && lookahead <= '9') ||
-          ('A' <= lookahead && lookahead <= 'Z') ||
-          lookahead == '_' ||
-          ('a' <= lookahead && lookahead <= 'z')) ADVANCE(11);
+      ACCEPT_TOKEN(sym__text);
+      if (set_contains(sym__text_character_set_1, 10, lookahead)) ADVANCE(11);
       END_STATE();
     case 12:
-      ACCEPT_TOKEN(sym__text);
-      if (set_contains(sym__text_character_set_1, 10, lookahead)) ADVANCE(12);
-      END_STATE();
-    case 13:
       ACCEPT_TOKEN(sym_minus);
       END_STATE();
     default:
@@ -566,44 +563,44 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
 
 static const TSLexMode ts_lex_modes[STATE_COUNT] = {
   [0] = {.lex_state = 0},
-  [1] = {.lex_state = 3},
-  [2] = {.lex_state = 2},
-  [3] = {.lex_state = 2},
-  [4] = {.lex_state = 2},
-  [5] = {.lex_state = 3},
+  [1] = {.lex_state = 2},
+  [2] = {.lex_state = 1},
+  [3] = {.lex_state = 1},
+  [4] = {.lex_state = 1},
+  [5] = {.lex_state = 2},
   [6] = {.lex_state = 0},
   [7] = {.lex_state = 0},
   [8] = {.lex_state = 0},
   [9] = {.lex_state = 0},
   [10] = {.lex_state = 0},
-  [11] = {.lex_state = 2},
-  [12] = {.lex_state = 2},
-  [13] = {.lex_state = 3},
-  [14] = {.lex_state = 2},
-  [15] = {.lex_state = 2},
-  [16] = {.lex_state = 2},
-  [17] = {.lex_state = 2},
-  [18] = {.lex_state = 2},
+  [11] = {.lex_state = 1},
+  [12] = {.lex_state = 1},
+  [13] = {.lex_state = 2},
+  [14] = {.lex_state = 1},
+  [15] = {.lex_state = 1},
+  [16] = {.lex_state = 1},
+  [17] = {.lex_state = 1},
+  [18] = {.lex_state = 1},
   [19] = {.lex_state = 0},
-  [20] = {.lex_state = 3},
+  [20] = {.lex_state = 2},
   [21] = {.lex_state = 0},
   [22] = {.lex_state = 0},
   [23] = {.lex_state = 0},
-  [24] = {.lex_state = 2},
+  [24] = {.lex_state = 1},
   [25] = {.lex_state = 0},
-  [26] = {.lex_state = 2},
+  [26] = {.lex_state = 1},
   [27] = {.lex_state = 0},
   [28] = {.lex_state = 0},
-  [29] = {.lex_state = 3},
-  [30] = {.lex_state = 3},
+  [29] = {.lex_state = 2},
+  [30] = {.lex_state = 2},
   [31] = {.lex_state = 0},
-  [32] = {.lex_state = 2},
+  [32] = {.lex_state = 1},
   [33] = {.lex_state = 0},
   [34] = {.lex_state = 0},
-  [35] = {.lex_state = 2},
+  [35] = {.lex_state = 1},
   [36] = {.lex_state = 0},
   [37] = {.lex_state = 0},
-  [38] = {.lex_state = 2},
+  [38] = {.lex_state = 1},
 };
 
 static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {

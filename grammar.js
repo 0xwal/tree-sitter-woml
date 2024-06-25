@@ -45,7 +45,7 @@ module.exports = grammar({
 
     identifier: ($) => token(/[a-zA-Z_][\w]*/),
 
-    _text: ($) => token(/[\w\d][\w\d_\'\"\()\[\]\{\}\.\,\?\! -]+/),
+    _text: ($) => token(/[\w\d][\w\d_\'\"\()\[\]\{\}\.\,\?\! -]*/),
 
     minus: ($) => "-",
   },
